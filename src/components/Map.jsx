@@ -10,23 +10,40 @@ export default function Map() {
     })
 
     const [stations, setStations] = useState([])
+    const [chosenState, setChosenState] = useState('All')
 
     useEffect(() => {
         fetch('/api/stations/all')
             .then(res => res.json())
-            .then(stations => setStations(stations))
-    },[])
+            .then(stations => setStations(stations.filter(station => {
+                if (chosenState === "NSW") {
+                    return station.state === "NSW"
+                } else if (chosenState === "QLD") {
+                    return station.state === "QLD"
+                } else if (chosenState === "SA") {
+                    return station.state === "SA"
+                } else if (chosenState === "VIC") {
+                    return station.state === "VIC"
+                } else {
+                    return station
+                }
+            })))
+    },[chosenState])
+
+    function handleChange(evt) {
+        setChosenState(evt.target.value)
+    }
 
     return isLoaded ? (
         <div className='map'>
-            {/* <label>State</label>
-            <select>
+            <label>State</label>
+            <select onChange={handleChange}>
                 <option value="All">All</option>
                 <option value="NSW">New South Wales</option>
                 <option value="QLD">Queensland</option>
                 <option value="SA">South Australia</option>
                 <option value="VIC">Victoria</option>
-            </select> */}
+            </select>
 
             <GoogleMap
                 zoom={5}
@@ -40,9 +57,6 @@ export default function Map() {
                                 position={{ lat: station.latitude, lng: station.longitude }}>
                            </MarkerF>
                 })}
-
-                <MarkerF position={center}>
-                </MarkerF>
             </GoogleMap>
         </div>
     ) : <></>
