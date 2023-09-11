@@ -6,6 +6,7 @@ function App() {
     <div className="App">
       <h1>Weather Stations</h1>
       <Map />
+      <footer>&copy;2023 wendyyzhu</footer>
     </div>
   );
 }
