@@ -1,6 +1,6 @@
 import './Map.css'
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindow } from '@react-google-maps/api'
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 const center = {lat: -24.01636, lng: 134.05129}
 
 export default function Map() {
@@ -11,6 +11,7 @@ export default function Map() {
 
     const [stations, setStations] = useState([])
     const [chosenState, setChosenState] = useState('All')
+    const [chosenStation, setChosenStation] = useState(null)
 
     useEffect(() => {
         fetch('/api/stations/all')
@@ -34,6 +35,11 @@ export default function Map() {
         setChosenState(evt.target.value)
     }
 
+    function handleClick(stationId) {
+        let infoWindowStation = stations.find(({ id }) => id === stationId)
+        setChosenStation(infoWindowStation)
+    }
+
     return isLoaded ? (
         <div className='map'>
             <label>State</label>
@@ -54,9 +60,23 @@ export default function Map() {
                 {stations.map(station => {
                     return <MarkerF
                                 key={station.id}
-                                position={{ lat: station.latitude, lng: station.longitude }}>
+                                position={{ lat: station.latitude, lng: station.longitude }}
+                                onClick={() => handleClick(station.id)}>
                            </MarkerF>
                 })}
+
+                {chosenStation && (
+                    <InfoWindow
+                        position={{ lat: chosenStation.latitude,
+                                    lng: chosenStation.longitude }}
+                        onCloseClick={() => setChosenStation(null)}>
+                        <div>
+                            <h2>Name: {chosenStation.ws_name}</h2>
+                            <h3>Site: {chosenStation.site}</h3>
+                            <h3>Portfolio: {chosenStation.portfolio}</h3>
+                        </div>
+                    </InfoWindow>
+                )}
             </GoogleMap>
         </div>
     ) : <></>
