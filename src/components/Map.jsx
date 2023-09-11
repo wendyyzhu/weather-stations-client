@@ -1,6 +1,7 @@
 import './Map.css'
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindow } from '@react-google-maps/api'
 import { useState, useEffect } from "react"
+import StateSelection from './StateSelection'
 let center = {lat: -24.01636, lng: 134.05129}
 let zoom = 5
 
@@ -68,14 +69,7 @@ export default function Map() {
 
     return isLoaded ? (
         <div className='map'>
-            <label>State</label>
-            <select onChange={handleChange}>
-                <option value="All">All</option>
-                <option value="NSW">New South Wales</option>
-                <option value="QLD">Queensland</option>
-                <option value="SA">South Australia</option>
-                <option value="VIC">Victoria</option>
-            </select>
+            <StateSelection onChange={handleChange}/>
 
             <GoogleMap
                 zoom={zoom}
