@@ -42,6 +42,7 @@ export default function Map() {
                     return station
                 }
             })))
+            handleClose()
     },[chosenState])
 
     function handleChange(evt) {
