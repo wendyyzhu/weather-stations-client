@@ -1,7 +1,8 @@
 import './Map.css'
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindow } from '@react-google-maps/api'
 import { useState, useEffect } from "react"
-const center = {lat: -24.01636, lng: 134.05129}
+let center = {lat: -24.01636, lng: 134.05129}
+let zoom = 5
 
 export default function Map() {
     const { isLoaded } = useJsApiLoader({ 
@@ -20,14 +21,24 @@ export default function Map() {
             .then(res => res.json())
             .then(stations => setStations(stations.filter(station => {
                 if (chosenState === "NSW") {
+                    center = {lat: -31.84, lng: 145.61}
+                    zoom = 6
                     return station.state === "NSW"
                 } else if (chosenState === "QLD") {
+                    center = {lat: -20.92, lng: 142.70}
+                    zoom = 6
                     return station.state === "QLD"
                 } else if (chosenState === "SA") {
+                    center = {lat: -30, lng: 136.21}
+                    zoom = 6
                     return station.state === "SA"
                 } else if (chosenState === "VIC") {
+                    center = {lat: -37.02, lng: 144.96}
+                    zoom = 6
                     return station.state === "VIC"
                 } else {
+                    center = {lat: -24.01636, lng: 134.05129}
+                    zoom = 5
                     return station
                 }
             })))
@@ -66,7 +77,7 @@ export default function Map() {
             </select>
 
             <GoogleMap
-                zoom={5}
+                zoom={zoom}
                 center={center}
                 mapContainerClassName='google-map'
             >
