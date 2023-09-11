@@ -1,3 +1,11 @@
 .App {
   text-align: center;
 }
+
+footer {
+  padding-top: 10px;
+}
+
+h1 {
+  margin-bottom: 0px;
+}
