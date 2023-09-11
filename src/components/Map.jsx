@@ -83,6 +83,7 @@ export default function Map() {
                     <InfoWindow
                         position={{ lat: chosenStation.latitude,
                                     lng: chosenStation.longitude }}
+                        options={{ pixelOffset: new window.google.maps.Size(0, -40) }}
                         onCloseClick={handleClose}>
                         <div>
                             <h2>Name: {chosenStation.ws_name}</h2>
