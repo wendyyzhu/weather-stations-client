@@ -12,6 +12,8 @@ export default function Map() {
     const [stations, setStations] = useState([])
     const [chosenState, setChosenState] = useState('All')
     const [chosenStation, setChosenStation] = useState(null)
+    const [variables, setVariables] = useState(null)
+    const [data, setData] = useState(null)
 
     useEffect(() => {
         fetch('/api/stations/all')
@@ -35,9 +37,21 @@ export default function Map() {
         setChosenState(evt.target.value)
     }
 
-    function handleClick(stationId) {
+    function handleOpen(stationId) {
         let infoWindowStation = stations.find(({ id }) => id === stationId)
         setChosenStation(infoWindowStation)
+        fetch(`/api/variables/${stationId}`)
+            .then(res => res.json())
+            .then(variables => setVariables(variables))
+        fetch(`/api/data/${stationId}`)
+            .then(res => res.json())
+            .then(data => setData(data[0]))
+    }
+
+    function handleClose() {
+        setChosenStation(null)
+        setData(null)
+        setVariables(null)
     }
 
     return isLoaded ? (
@@ -61,19 +75,30 @@ export default function Map() {
                     return <MarkerF
                                 key={station.id}
                                 position={{ lat: station.latitude, lng: station.longitude }}
-                                onClick={() => handleClick(station.id)}>
+                                onClick={() => handleOpen(station.id)}>
                            </MarkerF>
                 })}
 
-                {chosenStation && (
+                {data && (
                     <InfoWindow
                         position={{ lat: chosenStation.latitude,
                                     lng: chosenStation.longitude }}
-                        onCloseClick={() => setChosenStation(null)}>
+                        onCloseClick={handleClose}>
                         <div>
                             <h2>Name: {chosenStation.ws_name}</h2>
                             <h3>Site: {chosenStation.site}</h3>
                             <h3>Portfolio: {chosenStation.portfolio}</h3>
+                            {variables &&
+                                <>
+                                    {variables.length < 2 ? <h4>{variables[0].long_name}: {data.value1} {variables[0].unit}</h4>
+                                                        : <>
+                                                                <h4>{variables[0].long_name}: {data.value1} {variables[0].unit}</h4>
+                                                                <h4>{variables[1].long_name}: {data.value2} {variables[1].unit}</h4>
+                                                            </>
+                                    }
+                                    <h4>Last measurement at {data.timestamp}</h4>
+                                </>
+                            }
                         </div>
                     </InfoWindow>
                 )}
