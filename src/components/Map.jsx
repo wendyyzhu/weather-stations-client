@@ -1,5 +1,5 @@
 import './Map.css'
-import { GoogleMap, useJsApiLoader, MarkerF, InfoWindow } from '@react-google-maps/api'
+import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api'
 import { useState, useEffect } from "react"
 import StateSelection from './StateSelection'
 import InfoWindowPopUp from './InfoWindowPopUp'
